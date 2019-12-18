@@ -44,6 +44,15 @@ public class SwaggerToConfluenceServiceImpl implements SwaggerToConfluenceServic
 
     @Override
     public void convertSwaggerToConfluence(final SwaggerConfluenceConfig swaggerConfluenceConfig) {
+        javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(
+                new javax.net.ssl.HostnameVerifier(){
+
+                    public boolean verify(String hostname,
+                                          javax.net.ssl.SSLSession sslSession) {
+                        return hostname.equals("confluence-3scale-apicast-staging.api.sscp.tamedia.ch");
+                    }
+                });
+
         final String swaggerSchema = swaggerConfluenceConfig.getSwaggerSchema();
         final String confluenceRestApiUrl = swaggerConfluenceConfig.getConfluenceRestApiUrl();
         final String spaceKey = swaggerConfluenceConfig.getSpaceKey();
@@ -52,7 +61,7 @@ public class SwaggerToConfluenceServiceImpl implements SwaggerToConfluenceServic
 
         notNull(swaggerSchema, "Swagger Schema Cannot Be Null!");
         notNull(confluenceRestApiUrl, "Confluence REST API URL Cannot Be Null!");
-        notNull(swaggerConfluenceConfig.getAuthentication(), "Confluence Authentication Cannot Be Null!");
+        //notNull(swaggerConfluenceConfig.getAuthentication(), "Confluence Authentication Cannot Be Null!");
         notNull(spaceKey, "Confluence Space Key Cannot Be Null!");
 
         LOG.info("Publishing Swagger API Documentation to Confluence...");

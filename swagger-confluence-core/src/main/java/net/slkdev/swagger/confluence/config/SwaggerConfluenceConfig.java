@@ -31,11 +31,19 @@ public class SwaggerConfluenceConfig {
     private String spaceKey;
     private String swaggerSchema;
     private String title;
+    private String apiKey;
 
     public SwaggerConfluenceConfig() {
         generateNumericPrefixes = true;
         includeTableOfContentsOnSinglePage = true;
         paginationMode = PaginationMode.SINGLE_PAGE;
+    }
+
+    public String getApiKey(){
+        return apiKey;
+    }
+    public void setApiKey( final String apiKey ){
+        this.apiKey = apiKey;
     }
 
     public Integer getAncestorId() {

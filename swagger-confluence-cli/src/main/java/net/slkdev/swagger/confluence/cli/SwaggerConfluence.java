@@ -68,7 +68,6 @@ public class SwaggerConfluence {
         final Options options = new Options();
 
         options.addOption("a", "ancestor-id", true, "ancestor id to use for the published api doc");
-        options.addOption("b", "authentication", true, "base64 encoded user:pass pair for authentication");
         options.addOption("g", "generate-numeric-prefixes", true, "boolean flag to indicate whether to " +
                 "generate numeric prefixes for titles");
         options.addOption("h", "help", false, "Print help message with usage information");
@@ -79,6 +78,7 @@ public class SwaggerConfluence {
         options.addOption("p", "prefix", true, "Prefix to use for article titles to ensure uniqueness");
         options.addOption("t", "title", true, "Base title to use for the root article of the API doc");
         options.addOption("u", "confluence-rest-api-url", true, "URL to the confluence REST API");
+        options.addOption("y", "api-key", true, "api-key for the API gateway");
 
         return options;
     }
@@ -108,7 +108,7 @@ public class SwaggerConfluence {
         }
 
         swaggerConfluenceConfig.setAncestorId(ancestorId);
-        swaggerConfluenceConfig.setAuthentication(commandLine.getOptionValue("b"));
+        //swaggerConfluenceConfig.setAuthentication(commandLine.getOptionValue("b"));
         swaggerConfluenceConfig.setConfluenceRestApiUrl(commandLine.getOptionValue("u"));
         swaggerConfluenceConfig.setGenerateNumericPrefixes(
                 Boolean.valueOf(commandLine.getOptionValue("g", "true"))
@@ -119,6 +119,7 @@ public class SwaggerConfluence {
         swaggerConfluenceConfig.setPaginationMode(commandLine.getOptionValue("m","single"));
 
         final String prefix = commandLine.getOptionValue("p");
+        final String apiKey = commandLine.getOptionValue("y","");
 
         if(prefix != null){
             swaggerConfluenceConfig.setPrefix(prefix);
@@ -127,6 +128,7 @@ public class SwaggerConfluence {
         swaggerConfluenceConfig.setSpaceKey(commandLine.getOptionValue("k"));
         swaggerConfluenceConfig.setSwaggerSchema(commandLine.getOptionValue("s"));
         swaggerConfluenceConfig.setTitle(commandLine.getOptionValue("t"));
+        swaggerConfluenceConfig.setApiKey(apiKey);
 
         return swaggerConfluenceConfig;
     }

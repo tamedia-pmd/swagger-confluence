@@ -220,10 +220,10 @@ public class XHtmlToConfluenceServiceImpl implements XHtmlToConfluenceService {
             final String definitionsPageTitle;
 
             if (swaggerConfluenceConfig.isGenerateNumericPrefixes()) {
-                definitionsPageTitle = String.format("3. %sDefinitions",
+                definitionsPageTitle = String.format("3. Definitions",
                         swaggerConfluenceConfig.getPrefix());
             } else {
-                definitionsPageTitle = String.format("%sDefinitions",
+                definitionsPageTitle = String.format("%s Type Definitions",
                         swaggerConfluenceConfig.getPrefix());
             }
 
@@ -429,7 +429,8 @@ public class XHtmlToConfluenceServiceImpl implements XHtmlToConfluenceService {
     private void addExistingPageData(final ConfluencePage confluencePage) {
         final SwaggerConfluenceConfig swaggerConfluenceConfig = SWAGGER_CONFLUENCE_CONFIG.get();
 
-        final HttpHeaders httpHeaders = buildHttpHeaders(swaggerConfluenceConfig.getAuthentication());
+        //final HttpHeaders httpHeaders = buildHttpHeaders(swaggerConfluenceConfig.getAuthentication());
+        final HttpHeaders httpHeaders = buildHttpHeaders(swaggerConfluenceConfig.getApiKey());
         final HttpEntity<String> requestEntity = new HttpEntity<>(httpHeaders);
 
         final URI targetUrl = UriComponentsBuilder.fromUriString(swaggerConfluenceConfig.getConfluenceRestApiUrl())
@@ -494,11 +495,13 @@ public class XHtmlToConfluenceServiceImpl implements XHtmlToConfluenceService {
         }
     }
 
-    private static HttpHeaders buildHttpHeaders(final String confluenceAuthentication) {
+    private static HttpHeaders buildHttpHeaders(final String apiKey) {
         final HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", String.format("Basic %s", confluenceAuthentication));
+        //headers.set("Authorization", String.format("Basic %s", confluenceAuthentication));
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON_UTF8));
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        if( !apiKey.equals(""))
+        headers.add("api-key",apiKey);
 
         return headers;
     }
@@ -522,7 +525,7 @@ public class XHtmlToConfluenceServiceImpl implements XHtmlToConfluenceService {
             return;
         }
 
-        final HttpHeaders httpHeaders = buildHttpHeaders(swaggerConfluenceConfig.getAuthentication());
+        final HttpHeaders httpHeaders = buildHttpHeaders(swaggerConfluenceConfig.getApiKey());
         final HttpEntity<String> requestEntity = new HttpEntity<>(httpHeaders);
 
         final String path = String.format("/content/%s/child", targetPage.getId());
@@ -554,7 +557,7 @@ public class XHtmlToConfluenceServiceImpl implements XHtmlToConfluenceService {
     private void deletePage(final String pageId, final String title){
         final SwaggerConfluenceConfig swaggerConfluenceConfig = SWAGGER_CONFLUENCE_CONFIG.get();
 
-        final HttpHeaders httpHeaders = buildHttpHeaders(swaggerConfluenceConfig.getAuthentication());
+        final HttpHeaders httpHeaders = buildHttpHeaders(swaggerConfluenceConfig.getApiKey());
         final HttpEntity<String> requestEntity = new HttpEntity<>(httpHeaders);
 
         final String path = String.format("/content/%s", pageId);
@@ -592,7 +595,7 @@ public class XHtmlToConfluenceServiceImpl implements XHtmlToConfluenceService {
                 .build()
                 .toUri();
 
-        final HttpHeaders httpHeaders = buildHttpHeaders(swaggerConfluenceConfig.getAuthentication());
+        final HttpHeaders httpHeaders = buildHttpHeaders(swaggerConfluenceConfig.getApiKey());
         final String formattedXHtml = reformatXHtml(page.getXhtml(), confluenceLinkMap);
         final String jsonPostBody = buildPostBody(page.getAncestorId(), page.getConfluenceTitle(), formattedXHtml).toJSONString();
 
@@ -617,7 +620,7 @@ public class XHtmlToConfluenceServiceImpl implements XHtmlToConfluenceService {
                 .build()
                 .toUri();
 
-        final HttpHeaders httpHeaders = buildHttpHeaders(swaggerConfluenceConfig.getAuthentication());
+        final HttpHeaders httpHeaders = buildHttpHeaders(swaggerConfluenceConfig.getApiKey());
 
         final JSONObject postVersionObject = new JSONObject();
         postVersionObject.put("number", page.getVersion() + 1);
